@@ -74,8 +74,9 @@ class nginx::params {
   $nx_proxy_headers_hash_bucket_size = '64'
 
   $nx_logdir = $::kernel ? {
-    /(?i-mx:linux)/ => '/var/log/nginx',
-    /(?i-mx:sunos)/ => '/var/log/nginx',
+    /(?i-mx:linux)/   => '/var/log/nginx',
+    /(?i-mx:sunos)/   => '/var/log/nginx',
+    /(?i-mx:freebsd)/ => '/var/log/nginx',
   }
 
   $nx_pid = $::kernel ? {
@@ -85,12 +86,15 @@ class nginx::params {
         /(?i-mx:archlinux)/ => false,
         default             => '/var/run/nginx.pid',
     },
-    /(?i-mx:sunos)/  => '/var/run/nginx.pid',
+    /(?i-mx:sunos|freebsd)/   => '/var/run/nginx.pid',
   }
 
   $nx_conf_dir = $::kernelversion ? {
     /(?i-mx:joyent)/ => '/opt/local/etc/nginx',
-    default => '/etc/nginx',
+    default          => $::osfamily ? {
+      'FreeBSD' => '/usr/local/etc/nginx',
+      default   => '/etc/nginx'
+    }
   }
 
   if $::osfamily {
@@ -103,6 +107,7 @@ class nginx::params {
       /(?i-mx:redhat|suse|gentoo|linux)/ => 'nginx',
       /(?i-mx:debian)/                   => 'www-data',
       /(?i-mx:solaris)/                  => $solaris_nx_daemon_user,
+      /(?i-mx:freebsd)/                  => 'www',
     }
   } else {
     warning('$::osfamily not defined. Support for $::operatingsystem is deprecated')
@@ -112,6 +117,7 @@ class nginx::params {
       /(?i-mx:debian|ubuntu)/                                                                => 'www-data',
       /(?i-mx:fedora|rhel|redhat|centos|scientific|suse|opensuse|amazon|gentoo|oraclelinux)/ => 'nginx',
       /(?i-mx:solaris)/                                                                      => 'webservd',
+      /(?i-mx:freebsd)/                                                                      => 'www',
     }
   }
 
