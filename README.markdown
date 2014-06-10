@@ -1,6 +1,6 @@
 # NGINX Module
 
-[![Build Status](https://travis-ci.org/jfryman/puppet-nginx.png)](https://travis-ci.org/jfryman/puppet-nginx)
+[![Build Status](https://travis-ci.org/multiplay/puppet-nginx.png)](https://travis-ci.org/multiplay/puppet-nginx)
 
 James Fryman <james@frymanet.com>
 
