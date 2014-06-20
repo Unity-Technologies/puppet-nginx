@@ -51,14 +51,8 @@ define nginx::resource::upstream (
     validate_hash($upstream_cfg_prepend)
   }
 
-  $file_group = $::osfamily ? {
-    'FreeBSD' => 'wheel',
-    default   => 'root'
-  }
-
   File {
     owner => 'root',
-    group => $file_group,
     mode  => '0644',
   }
 

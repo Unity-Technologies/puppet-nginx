@@ -344,11 +344,6 @@ define nginx::resource::vhost (
   $name_sanitized = regsubst($name, ' ', '_', 'G')
   $config_file = "${vhost_dir}/${name_sanitized}.conf"
 
-  $file_group = $::osfamily ? {
-    'FreeBSD' => 'wheel',
-    default   => 'root'
-  }
-
   File {
     ensure => $ensure ? {
       'absent' => absent,
@@ -356,7 +351,6 @@ define nginx::resource::vhost (
     },
     notify => Class['nginx::service'],
     owner  => 'root',
-    group  => $file_group,
     mode   => '0644',
   }
 
@@ -394,7 +388,6 @@ define nginx::resource::vhost (
 
   concat { $config_file:
     owner  => 'root',
-    group  => $file_group,
     mode   => '0644',
     notify => Class['nginx::service'],
   }

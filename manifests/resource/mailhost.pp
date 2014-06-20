@@ -116,14 +116,8 @@ define nginx::resource::mailhost (
     }
   }
 
-  $file_group = $::osfamily ? {
-    'FreeBSD' => 'wheel',
-    default   => 'root'
-  }
-
   concat { $config_file:
     owner  => 'root',
-    group  => $file_group,
     mode   => '0644',
     notify => Class['nginx::service'],
   }
