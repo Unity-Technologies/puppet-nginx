@@ -60,14 +60,14 @@ class nginx::config(
   $worker_rlimit_nofile           = $nginx::params::nx_worker_rlimit_nofile,
 ) inherits nginx::params {
 
-  $group = $::osfamily ? {
-    'FreeBSD' => 'wheel',
-    default   => 'root'
-  }
-
   File {
     owner => 'root',
     mode  => '0644',
+  }
+
+  file { $nginx::params::nx_logdir:
+    ensure => directory,
+    owner  => $nginx::params::nx_daemon_user
   }
 
   file { $conf_dir:
