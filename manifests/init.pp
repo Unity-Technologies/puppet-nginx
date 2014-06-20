@@ -33,6 +33,7 @@ class nginx (
   $client_max_body_size           = $nginx::params::nx_client_max_body_size,
   $confd_purge                    = $nginx::params::nx_confd_purge,
   $configtest_enable              = $nginx::params::nx_configtest_enable,
+  $conf_dir                       = $nginx::params::nx_conf_dir,
   $conf_template                  = $nginx::params::nx_conf_template,
   $daemon_user                    = $nginx::params::nx_daemon_user,
   $events_use                     = $nginx::params::nx_events_use,
@@ -82,6 +83,8 @@ class nginx (
   $worker_connections             = $nginx::params::nx_worker_connections,
   $worker_processes               = $nginx::params::nx_worker_processes,
   $worker_rlimit_nofile           = $nginx::params::nx_worker_rlimit_nofile,
+  $geo_mappings                   = {},
+  $string_mappings                = {},
 ) inherits nginx::params {
 
   include stdlib
@@ -158,6 +161,9 @@ class nginx (
   validate_string($proxy_headers_hash_bucket_size)
   validate_bool($super_user)
 
+  validate_hash($string_mappings)
+  validate_hash($geo_mappings)
+
   class { 'nginx::package':
     package_name   => $package_name,
     package_source => $package_source,
@@ -170,6 +176,7 @@ class nginx (
     client_body_buffer_size        => $client_body_buffer_size,
     client_max_body_size           => $client_max_body_size,
     confd_purge                    => $confd_purge,
+    conf_dir                       => $conf_dir,
     conf_template                  => $conf_template,
     daemon_user                    => $daemon_user,
     events_use                     => $events_use,
@@ -219,6 +226,8 @@ class nginx (
   create_resources('nginx::resource::vhost', $nginx_vhosts)
   create_resources('nginx::resource::location', $nginx_locations)
   create_resources('nginx::resource::mailhost', $nginx_mailhosts)
+  create_resources('nginx::resource::map', $string_mappings)
+  create_resources('nginx::resource::geo', $geo_mappings)
 
   # Allow the end user to establish relationships to the "main" class
   # and preserve the relationship to the implementation classes through
