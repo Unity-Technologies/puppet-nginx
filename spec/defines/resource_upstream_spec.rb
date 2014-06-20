@@ -19,7 +19,6 @@ describe 'nginx::resource::upstream' do
       it { should contain_file("/etc/nginx/conf.d/#{title}-upstream.conf").with(
         {
           'owner'   => 'root',
-          'group'   => 'root',
           'mode'    => '0644',
           'ensure'  => 'file',
           'content' => /upstream #{title}/,
